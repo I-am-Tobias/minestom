@@ -5,7 +5,7 @@ dependencies {
     implementation(libs.bundles.adventure)
     compileOnly(libs.hydrazine)
     compileOnly(libs.bundles.kotlin)
-    compileOnly(libs.bundles.hephaistos)
+    implementation(libs.bundles.hephaistos)
     implementation(libs.minestomData)
     implementation(libs.dependencyGetter)
 
