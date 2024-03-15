@@ -1,5 +1,7 @@
 package net.minestom.server.plugins;
 
+import org.jetbrains.annotations.Nullable;
+
 import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Files;
@@ -31,5 +33,17 @@ public final class PluginManager {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public List<PluginInfo> getPlugins() {
+        return plugins;
+    }
+
+    public @Nullable PluginInfo getPlugin(String name) {
+        return plugins.stream().filter(plugin -> plugin.getDescription() != null && plugin.getDescription().getName().equals(name)).findFirst().orElse(null);
+    }
+
+    public void unloadPlugin(PluginInfo plugin) {
+        //todo: unload plugin
     }
 }
