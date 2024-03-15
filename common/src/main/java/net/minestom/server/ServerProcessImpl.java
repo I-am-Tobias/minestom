@@ -21,6 +21,7 @@ import net.minestom.server.monitoring.TickMonitor;
 import net.minestom.server.network.ConnectionManager;
 import net.minestom.server.network.PacketProcessor;
 import net.minestom.server.network.socket.Server;
+import net.minestom.server.plugins.PluginManager;
 import net.minestom.server.recipe.RecipeManager;
 import net.minestom.server.scoreboard.TeamManager;
 import net.minestom.server.snapshot.*;
@@ -55,6 +56,7 @@ final class ServerProcessImpl implements ServerProcess {
     private final BlockManager block;
     private final CommandManager command;
     private final RecipeManager recipe;
+    private final PluginManager pluginManager;
     private final TeamManager team;
     private final GlobalEventHandler eventHandler;
     private final SchedulerManager scheduler;
@@ -89,6 +91,7 @@ final class ServerProcessImpl implements ServerProcess {
         this.dimension = new DimensionTypeManager();
         this.biome = new BiomeManager();
         this.advancement = new AdvancementManager();
+        this.pluginManager = new PluginManager();
         this.bossBar = new BossBarManager();
         this.tag = new TagManager();
         this.trim = new TrimManager();
@@ -191,6 +194,11 @@ final class ServerProcessImpl implements ServerProcess {
     @Override
     public @NotNull Server server() {
         return server;
+    }
+
+    @Override
+    public @NotNull PluginManager pluginManager() {
+        return pluginManager;
     }
 
     @Override

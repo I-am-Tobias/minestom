@@ -16,6 +16,7 @@ import net.minestom.server.monitoring.BenchmarkManager;
 import net.minestom.server.network.ConnectionManager;
 import net.minestom.server.network.PacketProcessor;
 import net.minestom.server.network.socket.Server;
+import net.minestom.server.plugins.PluginManager;
 import net.minestom.server.recipe.RecipeManager;
 import net.minestom.server.scoreboard.TeamManager;
 import net.minestom.server.snapshot.Snapshotable;
@@ -102,6 +103,11 @@ public interface ServerProcess extends Snapshotable {
     @NotNull TagManager tag();
 
     @NotNull TrimManager trim();
+
+    /**
+     * Handles all plugins
+     */
+    @NotNull PluginManager pluginManager();
 
     /**
      * Handles all thrown exceptions from the server.
