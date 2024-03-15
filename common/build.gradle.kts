@@ -2,7 +2,7 @@ dependencies {
     // Core dependencies
     compileOnly(libs.slf4j)
     compileOnly(libs.jetbrainsAnnotations)
-    compileOnly(libs.bundles.adventure)
+    implementation(libs.bundles.adventure)
     compileOnly(libs.hydrazine)
     compileOnly(libs.bundles.kotlin)
     compileOnly(libs.bundles.hephaistos)
