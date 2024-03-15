@@ -4,5 +4,11 @@
 
 Minestom is an open-source library that enables developers to create their own Minecraft server software, without any code from Mojang.
 
-The main difference between Mojang's vanilla server and a minestom-based server, is that ours does not contain any features by default!
-However, we have a complete API which is designed to allow you to make anything possible, with ease.
+
+
+| module    | description                                         | groupId | artifact    | version                                                                                                                                                                              |
+|-----------|-----------------------------------------------------|---------|-------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| common    | Main source of minestom                             | `net.minestom` | `common`    |   |
+| bootstrap | Only default platform runner                        | `net.minestom` | `bootstrap` |   |
+| server    | Default minestom server api and collection of utils | `net.minestom` | `server`     |   |
+| pvp       | Simple minestom 1.20.4 pvp system                   | `net.minestom` | `pvp`       |  |
