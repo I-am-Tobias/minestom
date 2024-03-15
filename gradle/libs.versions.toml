@@ -17,7 +17,7 @@ caffeine = "3.1.6"
 fastutil = "8.5.12"
 flare = "2.0.1"
 gson = "2.10.1"
-jcTools = "4.0.1"
+jcTools = "4.0.3"
 
 # Quality
 junit-jupiter = "5.9.3"
