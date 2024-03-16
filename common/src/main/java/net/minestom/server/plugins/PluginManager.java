@@ -1,8 +1,15 @@
 package net.minestom.server.plugins;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import net.minestom.server.MinecraftServer;
 import org.jetbrains.annotations.Nullable;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.lang.reflect.InvocationTargetException;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -11,29 +18,69 @@ import java.util.List;
 
 public final class PluginManager {
 
-    private static final Path PLUGINS_DIRECTORY = Path.of("plugins");
+    private final PluginClassLoader pluginClassLoader = new PluginClassLoader();
+
+    // todo remove with osgan
+    private static final Gson PLUGIN_GSON = new GsonBuilder().serializeNulls().setPrettyPrinting().create();
     private final List<PluginInfo> plugins = new ArrayList<>();
 
     public PluginManager() {
+        var pluginDirectory = Path.of("plugins");
+
         try {
-            if (!Files.exists(PLUGINS_DIRECTORY)) {
-                Files.createDirectory(PLUGINS_DIRECTORY);
+            if (!Files.exists(pluginDirectory)) {
+                Files.createDirectory(pluginDirectory);
             }
 
-            Files.list(PLUGINS_DIRECTORY).filter(path -> path.toString().endsWith(".jar")).forEach(path -> plugins.add(new PluginInfo(path.toFile())));
+            Files.list(pluginDirectory).filter(path -> path.toString().endsWith(".jar")).forEach(path -> plugins.add(new PluginInfo(path.toFile())));
 
             // load all meta data
             for (var plugin : plugins) {
                 var jarUrl = new URL("jar:file:" + plugin.getFile().getAbsolutePath() + "!/plugin.json");
 
                 try (var inputStream = jarUrl.openStream()) {
-                    //todo: load plugin.json
+                    var description = PLUGIN_GSON.fromJson(new BufferedReader(new InputStreamReader(inputStream)), PluginDescription.class);
+                    plugin.setDescription(description);
                 }
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+
+        MinecraftServer.LOGGER.info("Loaded {} plugins: {}", plugins.size(), String.join(", ", plugins.stream()
+                .filter(it -> it.getDescription() != null)
+                .map(plugin -> plugin.getDescription().getName())
+                .toArray(String[]::new)));
+
+
+        for (var plugin : plugins) {
+            this.loadPlugin(plugin);
+        }
     }
+
+    private void loadPlugin(PluginInfo plugin) {
+
+        if (plugin.getDescription() == null) {
+            return;
+        }
+
+        try {
+            pluginClassLoader.addURL(plugin.getFile().toURI().toURL());
+
+            // todo change with osgan
+            Plugin instance = (Plugin) Class.forName(plugin.getDescription().getMainClass(), true, pluginClassLoader).getConstructor().newInstance();
+
+            plugin.setPlugin(instance);
+            plugin.setState(PluginState.LOADED);
+            instance.onEnable();
+            plugin.setState(PluginState.RUNNING);
+
+        } catch (MalformedURLException | ClassNotFoundException | InstantiationException | InvocationTargetException |
+                 IllegalAccessException | NoSuchMethodException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
 
     public List<PluginInfo> getPlugins() {
         return plugins;

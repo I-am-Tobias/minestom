@@ -1,0 +1,7 @@
+{
+  "name": "GamePlugin",
+  "version": "1.0.0",
+  "author": "HttpMarco",
+  "mainClass": "net.minestom.plugin.GamePlugin",
+  "depends": []
+}
