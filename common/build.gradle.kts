@@ -1,6 +1,7 @@
 dependencies {
     // Core dependencies
-    compileOnly(libs.slf4j)
+    implementation(libs.slf4j)
+    implementation(libs.log4j)
     compileOnly(libs.jetbrainsAnnotations)
     implementation(libs.bundles.adventure)
     compileOnly(libs.hydrazine)

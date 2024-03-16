@@ -10,7 +10,9 @@ dependencyGetter = "v1.0.1"
 hydrazine = "1.7.2"
 hephaistos = "2.6.1"
 jetbrainsAnnotations = "24.1.0"
-slf4j = "2.0.7"
+
+log4j = "2.23.0"
+slf4j = "2.0.12"
 
 # Performance / Data Structures
 caffeine = "3.1.6"
@@ -57,7 +59,10 @@ dependencyGetter = { group = "com.github.Minestom", name = "DependencyGetter", v
 jetbrainsAnnotations = { group = "org.jetbrains", name = "annotations", version.ref = "jetbrainsAnnotations" }
 hephaistos-common = { group = "io.github.jglrxavpok.hephaistos", name = "common", version.ref = "hephaistos" }
 hephaistos-gson = { group = "io.github.jglrxavpok.hephaistos", name = "gson", version.ref = "hephaistos" }
-slf4j = { group = "org.slf4j", name = "slf4j-api", version.ref = "slf4j"}
+
+#logging
+slf4j = { group = "org.slf4j", name = "slf4j-api", version.ref = "slf4j" }
+log4j = { group = "org.apache.logging.log4j", name = "log4j-slf4j2-impl", version.ref = "log4j" }
 
 # Performance / Data Structures
 caffeine = { group = "com.github.ben-manes.caffeine", name = "caffeine", version.ref = "caffeine" }
