@@ -3,22 +3,17 @@ plugins {
     alias(libs.plugins.blossom)
 
     `maven-publish`
-    signing
     alias(libs.plugins.nexuspublish)
 }
 
-// Read env vars (used for publishing generally)
-version = System.getenv("MINESTOM_VERSION") ?: "dev"
-val channel = System.getenv("MINESTOM_CHANNEL") ?: "local" // local, snapshot, release
-
-val shortDescription = "1.20.4 Lightweight Minecraft server"
+version = "1.0.0-SNAPSHOT"
 
 allprojects {
     apply(plugin = "java")
+    apply(plugin = "maven-publish")
 
     group = "net.minestom"
     version = rootProject.version
-    description = shortDescription
 
     repositories {
         mavenCentral()
@@ -40,6 +35,29 @@ allprojects {
         // Viewable packets make tracking harder. Could be re-enabled later.
         jvmArgs("-Dminestom.viewable-packet=false")
         jvmArgs("-Dminestom.inside-test=true")
+    }
+
+    publishing {
+        publications {
+            create<MavenPublication>("mavenJava") {
+                from(components["java"])
+
+                this.groupId = project.group.toString()
+                this.artifactId = project.name
+                this.version = project.version.toString()
+            }
+        }
+
+        repositories {
+            maven {
+                name = "bytemc"
+                url = uri("https://nexus.bytemc.de/repository/maven-public/")
+                credentials {
+                    username = System.getenv("BYTEMC_REPO_USER")
+                    password = System.getenv("BYTEMC_REPO_PASSWORD")
+                }
+            }
+        }
     }
 }
 
