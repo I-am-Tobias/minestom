@@ -14,7 +14,9 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 
 public final class PluginManager {
 
@@ -53,10 +55,13 @@ public final class PluginManager {
                 .toArray(String[]::new)));
 
 
-        for (var plugin : plugins) {
-            this.loadPlugin(plugin);
+        for (var plugin : plugins.stream().sorted(Comparator.comparing(it -> it.getDescription().getDepends().length)).toList()) {
+            if (plugin.getState() != PluginState.RUNNING && plugin.getState() != PluginState.LOADED) {
+                this.loadPlugin(plugin);
+            }
         }
     }
+
 
     private void loadPlugin(PluginInfo plugin) {
 
@@ -65,16 +70,28 @@ public final class PluginManager {
         }
 
         try {
+
+            if (plugin.getDescription().getDepends().length > 1) {
+                for (var depend : plugin.getDescription().getDepends()) {
+                    var pluginInfo = getPlugin(depend);
+                    if (pluginInfo == null) {
+                        MinecraftServer.LOGGER.error("Plugin {} depends on {} but it's not loaded", plugin.getDescription().getName(), depend);
+                        return;
+                    }
+                    if (pluginInfo.getState() != PluginState.RUNNING && pluginInfo.getState() != PluginState.LOADED) {
+                        this.loadPlugin(pluginInfo);
+                    }
+                }
+            }
+
             pluginClassLoader.addURL(plugin.getFile().toURI().toURL());
 
-            // todo change with osgan
             Plugin instance = (Plugin) Class.forName(plugin.getDescription().getMainClass(), true, pluginClassLoader).getConstructor().newInstance();
 
             plugin.setPlugin(instance);
             plugin.setState(PluginState.LOADED);
             instance.onEnable();
             plugin.setState(PluginState.RUNNING);
-
         } catch (MalformedURLException | ClassNotFoundException | InstantiationException | InvocationTargetException |
                  IllegalAccessException | NoSuchMethodException e) {
             throw new RuntimeException(e);
