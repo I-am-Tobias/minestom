@@ -457,6 +457,14 @@ public class Team implements PacketGroupingAudience {
         return suffix;
     }
 
+    public boolean isPlayerMembersUpToDate() {
+        return isPlayerMembersUpToDate;
+    }
+
+    public void setPlayerMembersUpToDate(boolean playerMembersUpToDate) {
+        isPlayerMembersUpToDate = playerMembersUpToDate;
+    }
+
     /**
      * Sends an {@link TeamsPacket.UpdateTeamAction} action packet.
      */
