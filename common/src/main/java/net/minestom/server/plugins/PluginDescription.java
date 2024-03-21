@@ -5,15 +5,15 @@ public final class PluginDescription {
     private final String name;
     private final String version;
     private final String author;
-    private final String mainClass;
-    private final String[] depends;
+    private final String entrypoint;
+    private final String[] dependencies;
 
-    public PluginDescription(String name, String version, String author, String mainClass, String[] depends) {
+    public PluginDescription(String name, String version, String author, String entrypoint, String[] dependencies) {
         this.name = name;
         this.version = version;
         this.author = author;
-        this.mainClass = mainClass;
-        this.depends = depends;
+        this.entrypoint = entrypoint;
+        this.dependencies = dependencies;
     }
 
     public String getName() {
@@ -28,11 +28,11 @@ public final class PluginDescription {
         return author;
     }
 
-    public String getMainClass() {
-        return mainClass;
+    public String getEntrypoint() {
+        return entrypoint;
     }
 
-    public String[] getDepends() {
-        return depends;
+    public String[] getDependencies() {
+        return dependencies;
     }
 }

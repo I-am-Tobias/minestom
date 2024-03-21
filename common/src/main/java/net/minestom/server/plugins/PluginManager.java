@@ -16,7 +16,6 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Objects;
 
 public final class PluginManager {
 
@@ -55,7 +54,7 @@ public final class PluginManager {
                 .toArray(String[]::new)));
 
 
-        for (var plugin : plugins.stream().sorted(Comparator.comparing(it -> it.getDescription().getDepends().length)).toList()) {
+        for (var plugin : plugins.stream().sorted(Comparator.comparing(it -> it.getDescription().getDependencies().length)).toList()) {
             if (plugin.getState() != PluginState.RUNNING && plugin.getState() != PluginState.LOADED) {
                 this.loadPlugin(plugin);
             }
@@ -71,8 +70,8 @@ public final class PluginManager {
 
         try {
 
-            if (plugin.getDescription().getDepends().length > 1) {
-                for (var depend : plugin.getDescription().getDepends()) {
+            if (plugin.getDescription().getDependencies().length > 1) {
+                for (var depend : plugin.getDescription().getDependencies()) {
                     var pluginInfo = getPlugin(depend);
                     if (pluginInfo == null) {
                         MinecraftServer.LOGGER.error("Plugin {} depends on {} but it's not loaded", plugin.getDescription().getName(), depend);
@@ -86,7 +85,7 @@ public final class PluginManager {
 
             pluginClassLoader.addURL(plugin.getFile().toURI().toURL());
 
-            Plugin instance = (Plugin) Class.forName(plugin.getDescription().getMainClass(), true, pluginClassLoader).getConstructor().newInstance();
+            Plugin instance = (Plugin) Class.forName(plugin.getDescription().getEntrypoint(), true, pluginClassLoader).getConstructor().newInstance();
 
             plugin.setPlugin(instance);
             plugin.setState(PluginState.LOADED);

@@ -6,7 +6,7 @@ plugins {
     alias(libs.plugins.nexuspublish)
 }
 
-version = "1.0.0-SNAPSHOT"
+version = "1.0.9-SNAPSHOT"
 
 allprojects {
     apply(plugin = "java")
