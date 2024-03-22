@@ -3,6 +3,7 @@ package net.minestom.server.plugins;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import net.minestom.server.MinecraftServer;
+import net.minestom.server.utils.validate.Check;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.BufferedReader;
@@ -24,8 +25,15 @@ public final class PluginManager {
     // todo remove with osgan
     private static final Gson PLUGIN_GSON = new GsonBuilder().serializeNulls().setPrettyPrinting().create();
     private final List<PluginInfo> plugins = new ArrayList<>();
+    private boolean loaded = false;
 
     public PluginManager() {
+
+    }
+
+    public void loadPlugins() {
+        Check.stateCondition(loaded, "Plugins have already been loaded!");
+
         var pluginDirectory = Path.of("plugins");
 
         try {
@@ -59,8 +67,9 @@ public final class PluginManager {
                 this.loadPlugin(plugin);
             }
         }
-    }
 
+        loaded = true;
+    }
 
     private void loadPlugin(PluginInfo plugin) {
 
